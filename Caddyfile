@@ -1,0 +1,8 @@
+0.0.0.0:80 {
+  root /srv
+  gzip
+  rewrite / {
+    if {path} not_starts_with /api
+    to {path} {path}/ /
+  }  
+}
