@@ -1,0 +1,33 @@
+stages:
+
+  - upload-image-internal-registry
+  - deploy-aws 
+
+build_image:
+  image: docker:git
+  services:
+  - docker:dind
+  stage: upload-image-internal-registry
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker build --network host -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+
+
+depoy_to_aws:   
+  image: docker:1.10.3
+  stage: deploy-aws   
+  before_script: 
+   #generate ssh key   
+    - 'which ssh-agent || ( apk update && apk add openssh )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" > /tmp/key && chmod 600 /tmp/key
+    - ssh-add /tmp/key
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+   
+  script:
+    - ssh <USERNAME>@<AWS MACHINE IP> '<SCRIPT TO RUN>'
+
+  only:
+    - <GITLAB BRANCH NAME> 
