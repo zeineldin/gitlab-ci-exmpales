@@ -12,3 +12,8 @@ gitlab-ci.yml-1
                 
                 
                 NOTE --> you have to create a  SSH_PRIVATE_KEY in the secrest variables  
+
+
+gitlab-ci.yml-2
+
+--> how to add automatic sonarqube code coverage test in gitlab-ci file 
