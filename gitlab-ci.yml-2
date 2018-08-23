@@ -1,0 +1,10 @@
+sonar-scanner:
+  image: node:alpine
+  stage: sonar-scanner
+  only:
+    - dev
+  script:
+  - npm run test:coverage
+  - apk --update add openjdk8-jre
+  - npm install sonarqube
+  - npm run sonar-scanner
