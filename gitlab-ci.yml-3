@@ -1,0 +1,20 @@
+
+# it's just exmaple 
+
+
+npm-build:
+  image: node:8
+  stage: build-npm
+  script:
+    - rm -rf build
+    - npm config set registry="<NEXUS_Path_till_group_repo>"
+    - npm config set //<NEXUS_Path_till_group_repo>:_authToken ${NPM_TOKEN}
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - build
+  cache:
+    paths:
+      - node_modules
+
